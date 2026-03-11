@@ -1,7 +1,10 @@
 # <a href="https://www.linkedin.com/in/alireza-delsouz/">Alireza (Ramin) Delsouz</a>'s IT and Cybersecurity Project Portfolio 🔐
 
-I'm passionate about cybersecurity and love tackling complex challenges through hands-on projects. From vulnerability management to threat detection, these projects allow me to dive deep into the ever-evolving landscape of cybersecurity. Please feel free to check them out and see the work I’ve put into enhancing security operations and processes!
+I believe the best way to secure the digital world is to make sure people actually understand it.  Sure, graphs and charts sometimes work, but let's be real: to really get a complex security point across, a clever meme does the trick every time.
 
+## Server Hardening
+
+- **[JEMSU AD Agency Security Hardening](https://github.com/ramin61092/digital_agency_security_hardening)**
 
 ## ⚠️ Vulnerability Management Projects
 
@@ -13,6 +16,9 @@ I'm passionate about cybersecurity and love tackling complex challenges through 
 - **[Threat Hunting Scenario (Tor Browser Usage)](https://github.com/joshmadakor0/threat-hunting-scenario-tor)**
 
 <hr/>
+
+I try to share most of my work here on GitHub, though I'll be honest, I'm still learning how to use the platform. If you have any questions, or if you just stopped by to check things out, please let me know what you think!
+![Memeimage](https://github.com/user-attachments/assets/86090a95-66c6-4612-b115-88f3d28680f5)
 
 ## 🤳 Connect With Me
 
