@@ -1,4 +1,4 @@
-# <a href="https://www.linkedin.com/in/alireza-delsouz/">Alireza (Ramin) Delsouz</a>'s IT and Cybersecurity Project Portfolio 🔐
+# <a href="https://www.linkedin.com/in/alireza-delsouz/">Alireza (Ramin) Delsouz</a>: IT and Cybersecurity Project Portfolio 🔐
 
 I believe the best way to secure the digital world is to make sure people actually understand it.  Sure, graphs and charts sometimes work, but let's be real: to really get a complex security point across, a clever meme does the trick every time.
 
