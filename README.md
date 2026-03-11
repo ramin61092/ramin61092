@@ -22,9 +22,9 @@ I'm passionate about cybersecurity and love tackling complex challenges through 
 [<img align="left" alt="___________ | Instagram" width="22px" src="https://cdn.jsdelivr.net/npm/simple-icons@v3/icons/instagram.svg" />][instagram]
 
 [twitter]: https://twitter.com/___________
-[youtube]: https://www.youtube.com/c/___________
-[instagram]: https://www.instagram.com/___________
-[linkedin]: https://linkedin.com/in/___________
+[youtube]: https://www.youtube.com/c/@zerotrustbro
+[instagram]: https://www.instagram.com/zerotrustbro?igsh=MW5zY3Y3OGEwYTljcA==
+[linkedin]: https://linkedin.com/in/alireza-delsouz
 
 <!--
 <img width="35" alt="image" src="https://github.com/user-attachments/assets/2f41c7cd-5ea8-4475-b451-a37161b6c3fb"> 
