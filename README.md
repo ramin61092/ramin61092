@@ -2,7 +2,7 @@
 
 I believe the best way to secure the digital world is to make sure people actually understand it.  Sure, graphs and charts sometimes work, but let's be real: to really get a complex security point across, a clever meme does the trick every time.
 
-## Server Hardening
+## :hammer: Server Hardening
 
 - **[JEMSU AD Agency Security Hardening](https://github.com/ramin61092/digital_agency_security_hardening)**
 
