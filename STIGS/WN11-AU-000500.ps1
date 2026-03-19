@@ -14,8 +14,8 @@
     STIG-ID         : WN11-AU-000500
 
 .TESTED ON
-    Date(s) Tested  : 2026-03-16
-    Tested By       : Ramin Delsouz
+    Date(s) Tested  : 
+    Tested By       : 
     Systems Tested  : 
     PowerShell Ver. : 5.1.26100.7920
 
