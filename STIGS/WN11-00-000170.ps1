@@ -27,6 +27,5 @@
 Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart
 
 #To enable (Give vulnerability)
-To give Vulnerability 
 Enable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -All -NoRestart
 Restart-Computer
