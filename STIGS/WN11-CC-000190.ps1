@@ -13,8 +13,8 @@
     STIG-ID         : WN11-CC-000190
 
 .TESTED ON
-    Date(s) Tested  : 2026-03-10
-    Tested By       : Ramin Delsouz
+    Date(s) Tested  : 
+    Tested By       :
     Systems Tested  : 
     PowerShell Ver. : 5.1.26100.7920
 
