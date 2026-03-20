@@ -25,9 +25,16 @@
 #> 
 
 #Don't use Basic authentication
+# 64-bit policy location (what STIG check expects)
 New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" -Force | Out-Null
 New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" `
   -Name "AllowBasic" -PropertyType DWord -Value 0 -Force | Out-Null
+
+# 32-bit policy location (in case the setting was applied via 32-bit host)
+New-Item -Path "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WinRM\Client" -Force | Out-Null
+New-ItemProperty -Path "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows\WinRM\Client" `
+  -Name "AllowBasic" -PropertyType DWord -Value 0 -Force | Out-N
+
 
 #Verify
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client" -Name "AllowBasic"
