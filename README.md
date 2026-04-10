@@ -15,7 +15,7 @@
 
 ---
 
-> *I believe the best way to secure the digital world is to make sure people actually understand it. Sure, graphs and charts sometimes work — but let's be real: to get a complex security point across, a clever meme does the trick every time.*
+> *The hardest part of cybersecurity isn't the technical side — it's getting people to care. I came from outside this industry, and I remember how quickly the jargon made me feel like it wasn't for me. A well-placed meme cuts through all of that faster than any compliance training ever will. I haven't forgotten what it felt like to be on the outside of this field, and that shapes how I think about security communication.*
 
 ---
 
@@ -34,6 +34,13 @@
 
 ---
 
+## 📋 Compliance & STIG Implementation
+
+- **[Windows 11 STIG — PowerShell Remediation Scripts](https://github.com/ramin61092/ramin61092/tree/main/STIGS)**
+  Implemented multiple DISA STIG controls for Windows 11 using PowerShell automation. Controls span audit policy configuration, WinRM hardening, encrypted file indexing, SMB protocol settings, and registry-based security enforcement — bringing systems toward DoD compliance baselines.
+
+---
+
 ## 🚨 Threat Hunting & Security Operations
 
 - **[Threat Hunt — Port Of Entry](Threat-Hunt-"Port-Of-Entry".md)**
@@ -41,7 +48,7 @@
 
 ---
 
-I'm still learning my way around GitHub, but I try to document and share my work as I go. If you have questions, feedback, or just stopped by to see what I'm building — I'd genuinely love to hear from you.
+My path here wasn't traditional — I come from real estate, where reading risk and making fast decisions with incomplete information is just part of the job. That foundation shaped how I approach security. I've worked with real logs, run threat hunts in Microsoft Sentinel and Azure, and built every project in this portfolio from scratch because understanding the "why" has always mattered more to me than checking a box. I also leverage AI deliberately — to sharpen queries, accelerate reporting, and cut through noise faster than I could alone. I'm early in this field, but I'm not starting from zero. Everything here is proof of that. This portfolio is still growing. So am I.
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/86090a95-66c6-4612-b115-88f3d28680f5" width="480" alt="Security meme" />
