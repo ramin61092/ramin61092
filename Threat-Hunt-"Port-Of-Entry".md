@@ -82,7 +82,7 @@ JADE SPIDER is notable for its preference for **Living off the Land (LotL) techn
 
 <div align="center">
 
-![Jade Spider Tradecraft](assets/jade%20spider%20meme.jpeg)
+![Port of Entry Meme](assets/port-of-entry-meme.jpeg)
 
 *JADE SPIDER's entire attack strategy, summarised.*
 
@@ -231,7 +231,7 @@ The attacker modified Windows Defender's registry to exclude specific file exten
 
 <div align="center">
 
-![Windows Defender Meme](assets/Windows%20Defender%20meme.jpeg)
+![Windows Defender Meme](assets/windows-defender-meme.jpeg)
 
 *Windows Defender's response after the attacker configured exclusions.*
 
@@ -459,7 +459,7 @@ The Security log was cleared first because it contains the most critical forensi
 
 <div align="center">
 
-![Port of Entry Meme](assets/Port%20of%20entry%20meme.jpeg)
+![Jade Spider Tradecraft](assets/jade-spider-meme.jpeg)
 
 *The Security event log after the attacker finished.*
 
