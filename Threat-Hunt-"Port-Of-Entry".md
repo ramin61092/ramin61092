@@ -82,7 +82,7 @@ JADE SPIDER is notable for its preference for **Living off the Land (LotL) techn
 
 <div align="center">
 
-![Jade Spider Tradecraft](assets/Jade%20Spider%20meme.jpeg)
+![Jade Spider Tradecraft](assets/jade%20spider%20meme.jpeg)
 
 *JADE SPIDER's entire attack strategy, summarised.*
 
