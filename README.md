@@ -8,12 +8,12 @@ I believe the best way to secure the digital world is to make sure people actual
 
 ## ⚠️ Vulnerability Management Projects
 
-- **[Vulnerability Management Program Implementation](https://github.com/joshcybertest/vulnerability-management-program)**
-- **[Programmatic Vulnerability Remediations (PowerShell and BASH)](https://github.com/joshcybertest/programmatic-vulnerability-remediations)**
+- **[Vulnerability Management Program Implementation](//insert path here)**
+- **[Programmatic Vulnerability Remediations (PowerShell and BASH)](//insert path here)**
 
 ## 🚨 Threat Hunting and Security Operations
 
-- **[Threat Hunting Scenario (Tor Browser Usage)](https://github.com/joshmadakor0/threat-hunting-scenario-tor)**
+- **[Threat Hunting (Port Of Entry)](Threat-Hunt-"Port-Of-Entry".md)**
 
 <hr/>
 
