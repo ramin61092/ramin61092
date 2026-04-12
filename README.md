@@ -23,7 +23,7 @@
 
 <p>
 <img src="https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=for-the-badge&logo=comptia&logoColor=white" />
-<img src="https://img.shields.io/badge/Google-CyberSec%20Certificate-4285F4?style=for-the-badge&logo=google&logoColor=white" />
+<img src="https://img.shields.io/badge/Google-CyberSecurity%20-4285F4?style=for-the-badge&logo=google&logoColor=white" />
 </p>
 
 ---
