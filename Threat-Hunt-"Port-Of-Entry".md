@@ -6,7 +6,6 @@
 
 ![Threat Hunt](https://img.shields.io/badge/Type-Threat%20Hunt-red?style=for-the-badge&logo=microsoftdefender)
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen?style=for-the-badge)
-![Flags](https://img.shields.io/badge/Flags%20Captured-20%2F20-blue?style=for-the-badge)
 ![Attribution](https://img.shields.io/badge/Threat%20Actor-JADE%20SPIDER-orange?style=for-the-badge)
 
 ---
