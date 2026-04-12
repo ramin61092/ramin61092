@@ -7,7 +7,6 @@
 
 ![Type](https://img.shields.io/badge/TYPE-THREAT%20HUNT-555555?style=flat-square)
 ![Status](https://img.shields.io/badge/STATUS-COMPLETE-238636?style=flat-square)
-![Flags](https://img.shields.io/badge/FLAGS%20CAPTURED-29%2F29-1d6fa4?style=flat-square)
 ![Actor](https://img.shields.io/badge/THREAT%20ACTOR-SCATTERED%20SPIDER-e63946?style=flat-square)
 ![Impact](https://img.shields.io/badge/FINANCIAL%20IMPACT-£24%2C500%20BEC-7b2d8b?style=flat-square)
 
