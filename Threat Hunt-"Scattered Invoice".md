@@ -1,51 +1,71 @@
-# 🕷️ Scattered Invoice — Threat Hunt Report
+<div align="center">
 
-**Case:** Scattered Invoice  
-**Analyst:** Ramin Delsouz  
-**Platform:** Microsoft Sentinel (`law-cyber-range`)  
-**Target Organisation:** LogN Pacific Financial Services — Finance Department  
-**Investigation Window:** 25 Feb 2026 21:00 UTC → 26 Feb 2026 00:00 UTC  
-**Report Date:** 26 Feb 2026  
-**Classification:** Confidential — Internal IR Use Only  
+# THREAT HUNT REPORT
+
+### LogN Pacific Financial Services
+#### Finance Department
+
+![Type](https://img.shields.io/badge/TYPE-THREAT%20HUNT-555555?style=flat-square)
+![Status](https://img.shields.io/badge/STATUS-COMPLETE-238636?style=flat-square)
+![Flags](https://img.shields.io/badge/FLAGS%20CAPTURED-29%2F29-1d6fa4?style=flat-square)
+![Actor](https://img.shields.io/badge/THREAT%20ACTOR-SCATTERED%20SPIDER-e63946?style=flat-square)
+![Impact](https://img.shields.io/badge/FINANCIAL%20IMPACT-£24%2C500%20BEC-7b2d8b?style=flat-square)
 
 ---
 
-## 📋 Table of Contents
+**Classification:** `CONFIDENTIAL` &nbsp;|&nbsp; **Analyst:** Ramin Delsouz &nbsp;|&nbsp; **Date:** 26 February 2026
 
-1. [Executive Summary](#executive-summary)
-2. [Incident Trigger](#incident-trigger)
-3. [Compromised Identity](#compromised-identity)
-4. [Attacker Infrastructure](#attacker-infrastructure)
-5. [MFA Fatigue Attack](#mfa-fatigue-attack)
-6. [Post-Compromise Activity](#post-compromise-activity)
-7. [Persistence Mechanism — Inbox Rules](#persistence-mechanism--inbox-rules)
-8. [Business Email Compromise](#business-email-compromise)
-9. [Scope of Compromise](#scope-of-compromise)
-10. [Defensive Gaps](#defensive-gaps)
-11. [MITRE ATT&CK Mapping](#mitre-attck-mapping)
-12. [Threat Actor Attribution](#threat-actor-attribution)
-13. [Indicators of Compromise](#indicators-of-compromise)
-14. [Containment Actions](#containment-actions)
-15. [Recommendations](#recommendations)
-16. [Key Terminology](#key-terminology)
-17. [Full Findings Log](#full-findings-log)
+**Platform:** Microsoft Sentinel &nbsp;|&nbsp; **Workspace:** `law-cyber-range`
+
+**Log Sources:** `SigninLogs` · `CloudAppEvents` · `EmailEvents`
+
+---
+
+</div>
+
+## Table of Contents
+
+- [Executive Summary](#executive-summary)
+- [Incident Trigger](#incident-trigger)
+- [Compromised Identity](#compromised-identity)
+- [Attacker Infrastructure](#attacker-infrastructure)
+- [MFA Fatigue Attack](#mfa-fatigue-attack)
+- [Post-Compromise Activity](#post-compromise-activity)
+- [Inbox Rule Persistence](#inbox-rule-persistence)
+- [Business Email Compromise](#business-email-compromise)
+- [Scope of Compromise](#scope-of-compromise)
+- [Defensive Gaps](#defensive-gaps)
+- [MITRE ATT&CK Mapping](#mitre-attck-mapping)
+- [Threat Actor Attribution](#threat-actor-attribution)
+- [Indicators of Compromise](#indicators-of-compromise)
+- [Containment Actions](#containment-actions)
+- [Recommendations](#recommendations)
+- [Full Flags Log](#full-flags-log)
 
 ---
 
 ## Executive Summary
 
-On the evening of 25 February 2026, a threat actor compromised the Microsoft 365 account of LogN Pacific Financial Services employee **Mark Smith** (`m.smith@lognpacific.org`) using an **MFA fatigue attack** combined with an **Adversary-in-the-Middle (AiTM)** session hijacking technique. The attacker, operating from the Netherlands via IP `205.147.16.190`, gained access to Mark's full M365 environment — including Outlook, OneDrive, and SharePoint.
+On the evening of **25 February 2026**, a threat actor compromised the Microsoft 365 account of LogN Pacific Financial Services employee **Mark Smith** (`m.smith@lognpacific.org`) using an **MFA fatigue attack** combined with an **Adversary-in-the-Middle (AiTM)** session hijacking technique.
 
-Once inside, the attacker created two covert inbox rules to forward financial emails to an external address and delete all security alerts, effectively blinding the victim to the compromise. The attacker then sent a fraudulent email to finance colleague **J. Reynolds** (`j.reynolds@lognpacific.org`), impersonating Mark and requesting a £24,500 vendor payment be redirected to a fraudulent bank account.
+The attacker, operating from the **Netherlands** via IP `205.147.16.190` on an Ubuntu Linux machine, gained access to Mark's full M365 environment — including Outlook, OneDrive, and SharePoint. Once inside, they created two covert inbox rules to silently exfiltrate financial emails and delete all security alerts, blinding the victim to the compromise.
 
-The receiving bank flagged the transaction as suspicious and froze the funds, preventing the full financial loss. The attack is attributed to **Scattered Spider** (UNC3944), a financially motivated threat group known for MFA fatigue attacks, BEC fraud, and targeting financial services organisations.
+The attacker then sent a fraudulent email to finance colleague **J. Reynolds** impersonating Mark, requesting a **£24,500 vendor payment** be redirected to a fraudulent bank account. The receiving bank flagged the transaction and froze the funds. The attack is attributed to **Scattered Spider** (UNC3944).
+
+> ⚠️ **Critical Finding:** LogN Pacific had **no Conditional Access policies enforced** on their M365 environment. The `ConditionalAccessStatus` field returned `notApplied` on every single attacker signin. A policy blocking foreign logins or requiring compliant devices would have stopped this attack entirely.
 
 ---
 
 ## Incident Trigger
 
-> **Reported:** 26 Feb 2026 09:30 UTC  
-> Finance employee Mark Smith reported receiving repeated MFA push notifications on the evening of 25 February while at home. Believing it to be an IT glitch, he eventually approved one to make them stop. The following morning, colleagues discovered inbox rules no one had created. LogN Pacific's bank subsequently called to report a suspicious £24,500 wire transfer to an unknown account.
+> 📞 **IR Lead:** *"We have a confirmed fraudulent wire transfer. £24,500 redirected to an unknown account. The bank caught it and froze the funds. Finance say they followed procedure — they got an email from a known colleague with updated banking details and processed it. Mark reported weird MFA notifications last night. He approved one just to make it stop. This morning his team found inbox rules nobody created. I need you in the sign-in logs now."*
+
+| Attribute | Value |
+|-----------|-------|
+| Reported Date | 26 Feb 2026 — 09:30 UTC |
+| Investigation Window | 25 Feb 2026 21:00 UTC → 26 Feb 2026 00:00 UTC |
+| Target Organisation | LogN Pacific Financial Services — Finance Department |
+| Financial Loss | £24,500 (frozen by receiving bank) |
 
 ---
 
@@ -53,12 +73,22 @@ The receiving bank flagged the transaction as suspicious and froze the funds, pr
 
 | Attribute | Value |
 |-----------|-------|
-| **Name** | Mark Smith |
-| **Email** | `m.smith@lognpacific.org` |
-| **Department** | Finance |
-| **Legitimate IP** | `172.175.65.103` (United States) |
+| Name | Mark Smith |
+| Email | `m.smith@lognpacific.org` |
+| Department | Finance |
+| Legitimate IP | `172.175.65.103` — United States |
+| Azure Object ID | `9199bf20-a13f-4107-85dc-02114787ef48` |
 
-Mark's account was confirmed as the entry point for the intrusion. His credentials had been obtained prior to the attack via infostealer malware logs purchased from underground markets, meaning the attacker had his password before the MFA fatigue campaign even began.
+Mark's credentials had been obtained prior to the attack via **infostealer malware** logs purchased from underground markets — meaning the attacker already had his password before the MFA fatigue campaign began.
+
+**Query — Confirm Compromised Identity**
+```kql
+SigninLogs
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where UserDisplayName contains "Mark Smith"
+| project UserPrincipalName, UserDisplayName
+| distinct UserPrincipalName, UserDisplayName
+```
 
 ---
 
@@ -66,166 +96,248 @@ Mark's account was confirmed as the entry point for the intrusion. His credentia
 
 | Attribute | Value |
 |-----------|-------|
-| **Attacker IP** | `205.147.16.190` |
-| **Country** | Netherlands (NL) |
-| **Operating System** | Ubuntu Linux (x86_64) |
-| **Browser** | Firefox 147.0 |
-| **User-Agent** | `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0` |
-| **Exfiltration Email** | `insights@duck.com` |
-| **Attacker Session ID** | `00225cfa-a0ff-fb46-a079-5d152fcdf72a` |
+| Attacker IP | `205.147.16.190` |
+| Country | 🇳🇱 Netherlands (NL) |
+| Operating System | Ubuntu Linux (x86_64) |
+| Browser | Firefox 147.0 |
+| User-Agent | `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0` |
+| Exfil Email | `insights@duck.com` |
+| Session ID | `00225cfa-a0ff-fb46-a079-5d152fcdf72a` |
 
-The attacker's use of **Ubuntu Linux with Firefox** rather than a typical Windows/Chrome combination is an anomaly indicator. The Netherlands origin contrasts starkly with Mark's United States baseline location, making this a clear impossible travel scenario that should have been caught by Conditional Access policies — had any been in place.
+> 🔍 **Analyst Note:** The attacker's use of **Ubuntu Linux with Firefox** instead of a typical Windows/Chrome profile is an anomaly indicator. The Netherlands origin contrasts starkly with Mark's United States baseline — a clear impossible travel scenario that should have been caught by Conditional Access had any been in place.
+
+**Query — Identify Attacker IP (Baseline Exclusion Method)**
+```kql
+// First establish Mark's legitimate baseline IP, then exclude it
+SigninLogs
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where UserPrincipalName == "m.smith@lognpacific.org"
+| where IPAddress != "172.175.65.103"
+| project TimeGenerated, IPAddress, Location, UserAgent, ResultType, ResultDescription
+| order by TimeGenerated asc
+```
 
 ---
 
 ## MFA Fatigue Attack
 
-The attacker employed **T1621 — Multi-Factor Authentication Request Generation**, commonly known as MFA fatigue or push bombing.
+<div align="center">
 
 ![Zoolander Cyber Meme](assets/Zoolander%20Cyber%20Meme.jpeg)
 
-### How It Worked — AiTM Session Hijacking
+*// Mark approves. Scattered Spider intercepts. Simple as that.*
 
-The attacker did not simply guess Mark's MFA response. They deployed a more sophisticated **Adversary-in-the-Middle (AiTM)** proxy technique:
+</div>
+
+The attacker employed **T1621 — MFA Request Generation**. After just **3 failed push attempts**, Mark approved one to make the notifications stop. This was not a simple MFA bypass — it was a sophisticated **Adversary-in-the-Middle (AiTM)** proxy attack.
 
 ```
-Normal login:   Mark → Microsoft ✅
-AiTM attack:    Mark → Attacker Proxy → Microsoft
-                             ↓
-                        Steals session token
-                             ↓
-                Attacker → Microsoft (as Mark) ✅
+// Normal authentication flow
+Mark  ──────────────────────────────────────▶  Microsoft ✅
+
+// AiTM attack flow
+Mark  ──▶  Attacker Proxy (NL)  ──▶  Microsoft
+                   │
+                   ▼
+          Session token intercepted
+                   │
+                   ▼
+Attacker  ──▶  Import cookie into Firefox  ──▶  Microsoft (as Mark) ✅
 ```
 
-1. **Credentials already stolen** — Mark's password was purchased from a dark web infostealer log prior to the attack
-2. **Proxy established** — The attacker set up an AiTM proxy server between Mark and Microsoft
-3. **Push bombing begins** — The proxy triggered real Microsoft MFA push notifications to Mark's phone
-4. **Fatigue sets in** — After **3 failed attempts**, Mark approved a push just to make the notifications stop
-5. **Session token stolen** — Microsoft issued a valid session cookie which the attacker's proxy intercepted in real time
-6. **Session hijacked** — The attacker imported the stolen cookie into their Firefox browser in the Netherlands and was instantly authenticated as Mark — no password or MFA required
+The moment Mark approved the push, Microsoft issued a valid session token which the proxy intercepted in real time. The attacker imported the stolen cookie into their own browser and was instantly authenticated as Mark — no password or MFA ever needed again.
 
-### MFA Push Bombing Sequence
+### Push Bombing Sequence
 
-| Time (UTC-5) | Result | Description |
-|-------------|--------|-------------|
-| 9:54:24 PM | 50074 | Strong Authentication required — failed |
-| 9:54:55 PM | 50140 | Keep me signed in interrupt — failed |
-| 9:55:15 PM | 50140 | Keep me signed in interrupt — failed |
-| **9:59:52 PM** | **0** | **✅ Mark approves — attacker gains access** |
+| Time (Local) | Result Code | Description |
+|-------------|-------------|-------------|
+| 9:54:24 PM | `50074` | Strong Authentication required — MFA not completed |
+| 9:54:55 PM | `50140` | Keep me signed in interrupt — failed |
+| 9:55:15 PM | `50140` | Keep me signed in interrupt — failed |
+| **9:59:52 PM** | **`0`** | ✅ **Mark approves — attacker gains session** |
 
-> **Error Code 50074** — Indicates strong authentication (MFA) was required but not completed. This code repeating multiple times in quick succession is the signature of an MFA fatigue attack in SigninLogs.
+> 📌 **Error Code 50074** — Indicates MFA was required but not completed. This code repeating in rapid succession from a foreign IP is the definitive signature of an MFA fatigue attack in SigninLogs.
+
+**Query — MFA Push Bombing Sequence**
+```kql
+SigninLogs
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where UserPrincipalName == "m.smith@lognpacific.org"
+| where IPAddress == "205.147.16.190"
+| project TimeGenerated, ResultType, ResultDescription, AppDisplayName, ConditionalAccessStatus
+| order by TimeGenerated asc
+```
 
 ---
 
 ## Post-Compromise Activity
 
-Immediately after authentication, the attacker moved methodically through Mark's M365 environment:
+The attacker's first action after gaining access was `MailItemsAccessed` — reading the inbox to understand active conversations and identify the right vendor thread before making any moves.
 
-| Time (UTC-5) | Application | Action |
-|-------------|------------|--------|
-| 9:59 PM | One Outlook Web | `MailItemsAccessed` — Reading emails, reconnaissance |
-| 10:02 PM | One Outlook Web | `New-InboxRule` — Created rule `.` (forward financial emails) |
-| 10:03 PM | One Outlook Web | `New-InboxRule` — Created rule `-` (delete security alerts) |
-| 10:06 PM | One Outlook Web | Sent fraudulent BEC email to J. Reynolds |
-| 10:07 PM | Microsoft OneDrive for Business | `FileAccessed` — File reconnaissance |
-| 10:09 PM | Office 365 SharePoint Online | Company document browsing |
-| 10:10 PM | OfficeHome | M365 portal navigation |
-| 10:12 PM+ | One Outlook Web | Continued email access |
+**Query — Post-Compromise CloudApp Activity**
+```kql
+CloudAppEvents
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where IPAddress == "205.147.16.190"
+| project TimeGenerated, ActionType, Application, AccountDisplayName, IPAddress, RawEventData
+| order by TimeGenerated asc
+```
 
-The attacker's **first action** after gaining access was `MailItemsAccessed` — reading the inbox to understand active conversations, identify the right vendor thread, and gather intelligence before making their move. This demonstrates patience and operational discipline characteristic of Scattered Spider.
+| Time | Application | Action | Significance |
+|------|-------------|--------|--------------|
+| 9:59 PM | One Outlook Web | `MailItemsAccessed` | Inbox reconnaissance |
+| 10:02 PM | One Outlook Web | `New-InboxRule` | Created rule `.` — forward financial emails |
+| 10:03 PM | One Outlook Web | `New-InboxRule` | Created rule `-` — delete security alerts |
+| 10:06 PM | One Outlook Web | Email sent | Fraudulent BEC email to J. Reynolds |
+| 10:07 PM | Microsoft OneDrive for Business | `FileAccessed` | File system reconnaissance |
+| 10:09 PM | Office 365 SharePoint Online | Browse | Company document access |
+| 10:10 PM | OfficeHome | Navigate | Full M365 environment scoping |
 
 ---
 
-## Persistence Mechanism — Inbox Rules
+## Inbox Rule Persistence
 
-The attacker created two inbox rules using **T1564.008 — Hide Artifacts: Email Hiding Rules**, both named with single invisible characters to evade detection.
+<div align="center">
 
 ![Girl Bro Cyber Meme](assets/Girl%20Bro%20Cyber%20Meme.jpeg)
 
-### Rule 1 — Financial Email Exfiltration
+*// Scattered Spider's operational security in practice.*
+
+</div>
+
+The attacker created two inbox rules using **T1564.008 — Hide Artifacts: Email Hiding Rules**. Both were named with single invisible characters — a deliberate evasion technique designed to blend into the Outlook rules list as visual noise.
+
+**Query — Find All Malicious Inbox Rules**
+```kql
+CloudAppEvents
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where IPAddress == "205.147.16.190"
+| where ActionType == "New-InboxRule"
+| project TimeGenerated, ActionType, AccountDisplayName, IPAddress, RawEventData
+| order by TimeGenerated asc
+// Expand RawEventData > Parameters to find rule Name, ForwardTo,
+// SubjectOrBodyContainsWords, DeleteMessage, and StopProcessingRules
+```
+
+### Rule 1 — Financial Exfiltration
 
 | Parameter | Value |
 |-----------|-------|
-| **Rule Name** | `.` *(single period)* |
-| **Forward To** | `insights@duck.com` |
-| **Keywords** | `invoice, payment, wire, transfer` |
-| **StopProcessingRules** | `True` |
-
-Any email containing the words invoice, payment, wire, or transfer was silently forwarded to the attacker's external address at `insights@duck.com` in real time — creating a live wiretap on all of Mark's financial communications.
+| Rule Name | `.` *(single period)* |
+| Action | Forward to `insights@duck.com` |
+| Keywords | `invoice, payment, wire, transfer` |
+| StopProcessingRules | `True` |
 
 ### Rule 2 — Security Alert Deletion
 
 | Parameter | Value |
 |-----------|-------|
-| **Rule Name** | `-` *(single hyphen)* |
-| **Keywords** | `suspicious, security, phishing, unusual, compromised, verify` |
-| **DeleteMessage** | `True` |
-| **StopProcessingRules** | `True` |
+| Rule Name | `-` *(single hyphen)* |
+| Action | `DeleteMessage: True` |
+| Keywords | `suspicious, security, phishing, unusual, compromised, verify` |
+| StopProcessingRules | `True` |
 
-Any security alert, MFA notification, or IT warning email was automatically deleted before Mark could see it. This ensured the victim remained completely unaware of the compromise while it was actively occurring.
-
-### ⭐ Key Analyst Note — Evasion by Invisibility
-
-> The choice of a **single period (`.`)** and **single hyphen (`-`)** as rule names is a deliberate and highly effective evasion technique. When a user or administrator reviews the inbox rules list in Outlook, these characters appear as visual noise — they blend into the UI almost invisibly and do not raise suspicion the way descriptive names like "ForwardInvoices" or "DeleteAlerts" would. Most users would scroll past them without a second thought.
-
-> Setting `StopProcessingRules` to `True` on both rules ensured no other rules processed matched emails afterward — the victim's own notification or folder rules never fired on financial or security emails. Together, these two rules created a complete intelligence blackout: the attacker could see everything while the victim saw nothing suspicious.
+> ⭐ **Key Analyst Note — Evasion by Invisibility**
+>
+> The choice of a **single period** and **single hyphen** as rule names is a deliberate and highly effective evasion technique. When an administrator reviews the inbox rules list in Outlook, these characters appear as visual noise — virtually invisible without careful inspection. Most users would scroll past them without a second glance.
+>
+> Setting `StopProcessingRules` to `True` on both rules ensured no other rules processed matched emails — the victim's own notification rules never fired on financial or security emails. Together, these two rules created a **complete intelligence blackout**: the attacker could see everything while the victim saw nothing.
 
 ---
 
 ## Business Email Compromise
 
-### ⭐ Key Analyst Note — Thread Hijacking
-
-> The attacker did not send a new suspicious email. They **replied to an existing vendor invoice thread** — the "RE:" prefix made the email appear as a natural continuation of a legitimate conversation between colleagues. J. Reynolds had no reason to doubt an internal email from a known colleague continuing an active thread. This is a hallmark Scattered Spider technique: they don't create suspicious new emails, they **weaponize existing trusted conversations**.
->
-> This is precisely why the finance team insists they "followed standard procedures" — from their perspective, they did. The fraud was invisible at the human level. The `Intra-org` email direction confirmed the email originated from a **legitimate internal account**, bypassing all external email security controls entirely.
-
-### Fraudulent Email Details
-
 | Attribute | Value |
 |-----------|-------|
-| **Time Sent** | 25 Feb 2026 10:06:39 PM UTC |
-| **Sender** | `m.smith@lognpacific.org` *(attacker)* |
-| **Recipient** | `j.reynolds@lognpacific.org` |
-| **Subject** | `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
-| **Sender IP** | `205.147.16.190` ✅ *Matches attacker IP — confirmed same session* |
-| **Direction** | `Intra-org` |
+| Time Sent | 25 Feb 2026 — 22:06:39 UTC |
+| Sender | `m.smith@lognpacific.org` *(attacker)* |
+| Recipient | `j.reynolds@lognpacific.org` |
+| Subject | `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
+| Sender IP | `205.147.16.190` ✅ Matches attacker IP |
+| Direction | `Intra-org` |
 
-The SenderIPv4 on the fraudulent BEC email matches the attacker's signin IP across both EmailEvents and SigninLogs — this cross-correlation across two separate log sources conclusively proves the same attacker session was responsible for both the authentication and the fraudulent wire transfer email.
+**Query — Hunt Fraudulent BEC Email**
+```kql
+EmailEvents
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where SenderMailFromAddress == "m.smith@lognpacific.org"
+| where SenderIPv4 == "205.147.16.190"
+| project TimeGenerated, SenderMailFromAddress, RecipientEmailAddress,
+          Subject, SenderIPv4, EmailDirection
+| order by TimeGenerated asc
+```
+
+> ⭐ **Key Analyst Note — Thread Hijacking**
+>
+> The attacker did not send a new suspicious email — they **replied to an existing vendor invoice thread**. The "RE:" prefix made the email appear as a natural continuation of a legitimate ongoing conversation between colleagues. J. Reynolds had no reason to doubt an internal email from a known colleague.
+>
+> The `Intra-org` email direction confirms it originated from a legitimate internal account, bypassing all external email security controls entirely. This is why the finance team insists they "followed standard procedures" — **from their perspective, they did**. The fraud was invisible at the human level.
+
+> 🔗 **IP Cross-Correlation:** The SenderIPv4 on the fraudulent email (`205.147.16.190`) matches exactly the attacker's signin IP from SigninLogs. This cross-correlation across two separate log sources — **SigninLogs and EmailEvents** — conclusively proves the same attacker session was responsible for both the authentication and the fraudulent wire transfer email.
 
 ---
 
 ## Scope of Compromise
 
+<div align="center">
+
 ![Oprah Cyber Meme](assets/Oprah%20Cyber%20Meme.jpeg)
 
-The attacker's access extended well beyond email. They touched virtually the entire M365 environment during the attack window:
+*// The full M365 environment. Nobody was safe.*
+
+</div>
+
+The attacker's access extended well beyond email — they touched virtually the entire M365 environment during the attack window.
+
+**Query — Full Application Footprint**
+```kql
+SigninLogs
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where UserPrincipalName == "m.smith@lognpacific.org"
+| summarize Count = count() by AppDisplayName, IPAddress
+| order by IPAddress asc
+```
+
+**Query — File & Data Access**
+```kql
+CloudAppEvents
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where IPAddress == "205.147.16.190"
+| where ActionType in ("FileAccessed", "FileDownloaded", "FileViewed", "MailItemsAccessed")
+| project TimeGenerated, ActionType, Application, AccountDisplayName, RawEventData
+| order by TimeGenerated asc
+```
 
 | Application | Access Type | Significance |
 |-------------|------------|--------------|
-| One Outlook Web | Email read/write | Reconnaissance, inbox rules, BEC |
-| Microsoft OneDrive for Business | File access | Personal file reconnaissance |
-| SharePoint Online | Document browsing | Company document access |
-| SharePoint Online Web Client Extensibility | Navigation | SharePoint environment mapping |
-| OfficeHome | Portal navigation | Full M365 environment scoping |
-
-This was not a targeted smash-and-grab. The attacker methodically mapped the entire M365 environment — suggesting they were gathering intelligence for potential future attacks in addition to the immediate invoice fraud.
+| One Outlook Web | `MailItemsAccessed` / Send | Email recon, inbox rules, BEC |
+| Microsoft OneDrive for Business | `FileAccessed` | Personal file reconnaissance |
+| SharePoint Online | Browse | Company document access |
+| SharePoint Web Client Extensibility | Navigate | SharePoint environment mapping |
+| OfficeHome | Navigate | Full M365 portal scoping |
 
 ---
 
 ## Defensive Gaps
 
-### ⭐ Critical Finding — No Conditional Access Policies
+> 🚨 **Critical — No Conditional Access Policies**
+>
+> The `ConditionalAccessStatus` field returned **`notApplied`** on every single attacker signin. LogN Pacific had **zero Conditional Access policies enforced** on their M365 environment. A properly configured policy could have blocked this attack by flagging the Netherlands origin, the unmanaged Ubuntu Linux device, or the impossible travel scenario.
 
-The `ConditionalAccessStatus` field in SigninLogs returned **`notApplied`** for every single attacker signin during the attack window. This means LogN Pacific had **no Conditional Access policies enforced** on their M365 environment.
+**Query — Conditional Access Status Check**
+```kql
+SigninLogs
+| where TimeGenerated between (datetime(2026-02-25T21:00:00Z) .. datetime(2026-02-26T00:00:00Z))
+| where IPAddress == "205.147.16.190"
+| where ResultType == 0
+| project TimeGenerated, AppDisplayName, ConditionalAccessStatus,
+          RiskLevelDuringSignIn, UserAgent, Location
+| order by TimeGenerated asc
+```
 
-A properly configured Conditional Access policy could have blocked this attack at multiple points:
-- Blocking signin attempts from high-risk geographic locations (Netherlands vs. US baseline)
-- Requiring compliant or managed devices (attacker used unmanaged Ubuntu Linux)
-- Flagging impossible travel scenarios (US and NL in same session)
-- Requiring number matching on MFA prompts (defeats push bombing entirely)
-
-This is the single most significant defensive gap identified in this investigation.
+> ⚠️ **High — No MFA Number Matching**
+>
+> Standard MFA push notifications with no number matching allowed Mark to blindly approve a request without verifying context. Number matching forces users to confirm a displayed code — making mindless approval during push bombing impossible.
 
 ---
 
@@ -233,30 +345,26 @@ This is the single most significant defensive gap identified in this investigati
 
 | Technique ID | Tactic | Name | Description |
 |-------------|--------|------|-------------|
-| **T1621** | Credential Access | MFA Request Generation | Repeated MFA push notifications to fatigue the user into approving. Bypasses MFA by turning the security control against the user. The defence is implementing number matching on MFA prompts. |
-| **T1564.008** | Defense Evasion | Hide Artifacts: Email Hiding Rules | Inbox rules created to forward financial emails externally and delete security alerts. Named with single invisible characters to evade detection. |
-| **T1555** | Credential Access | Credentials from Password Stores | Initial credentials obtained via infostealer malware logs purchased from underground markets prior to the attack. |
-| **T1557** | Credential Access | Adversary-in-the-Middle | AiTM proxy used to intercept the MFA session token in real time, enabling full account takeover without requiring ongoing access to the victim's credentials. |
+| `T1621` | Credential Access | MFA Request Generation | Repeated MFA push notifications to fatigue the user into approving. Bypasses MFA by exploiting human frustration. Defence: implement number matching. |
+| `T1564.008` | Defense Evasion | Hide Artifacts: Email Hiding Rules | Inbox rules created to silently forward financial emails externally and delete security alerts. Named with single invisible characters. |
+| `T1555` | Credential Access | Credentials from Password Stores | Initial credentials obtained via infostealer malware logs purchased from underground markets prior to the attack. |
+| `T1557` | Credential Access | Adversary-in-the-Middle | AiTM proxy intercepted the authenticated session token in real time after Mark approved the MFA push. |
 
 ---
 
 ## Threat Actor Attribution
 
-**Threat Group: Scattered Spider (UNC3944 / 0ktapus)**
+| Attribute | Value |
+|-----------|-------|
+| Common Name | **Scattered Spider** |
+| Mandiant Designation | `UNC3944` |
+| Alternate Alias | `0ktapus` |
+| Motivation | Financial |
+| Known Victims | MGM Resorts, Caesars Entertainment, multiple UK retailers |
 
-Scattered Spider is a financially motivated threat group known for:
+> 🕷️ **Attribution Rationale:** Every technique observed matches Scattered Spider's documented TTPs — MFA fatigue, AiTM session hijacking, single-character inbox rule names, thread hijacking for BEC, legitimate cloud infrastructure, and infostealer credentials as initial access. Attribution is assessed with **high confidence**.
 
-- MFA fatigue / push bombing attacks (T1621)
-- Help desk social engineering
-- Business Email Compromise targeting finance teams
-- Use of legitimate cloud infrastructure to blend in
-- AiTM session hijacking
-- Purchasing infostealer logs for initial credentials
-- Targeting hospitality, retail, and financial services
-
-**Known victims include:** MGM Resorts, Caesars Entertainment, and multiple UK retailers.
-
-Every technique observed in this investigation — the MFA fatigue, the single-character inbox rule names, the thread hijacking, the legitimate cloud infrastructure, the financial targeting — is consistent with Scattered Spider's documented TTPs, confirming attribution with high confidence.
+> 📌 **Note on UNC3944:** This is Mandiant's internal tracking designation for Scattered Spider. "UNC" stands for *Uncategorised* — used for threat groups still being fully attributed before receiving a formal name designation.
 
 ---
 
@@ -264,29 +372,31 @@ Every technique observed in this investigation — the MFA fatigue, the single-c
 
 | Type | Value |
 |------|-------|
-| Attacker IP | `205.147.16.190` |
-| Attacker Country | Netherlands (NL) |
-| Exfiltration Email | `insights@duck.com` |
-| Attacker Session ID | `00225cfa-a0ff-fb46-a079-5d152fcdf72a` |
-| Malicious Inbox Rule 1 | `.` (forward: invoice, payment, wire, transfer → insights@duck.com) |
-| Malicious Inbox Rule 2 | `-` (delete: suspicious, security, phishing, unusual, compromised, verify) |
-| Attacker User-Agent | `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0` |
-| Fraudulent Email Subject | `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
-| Compromised Account | `m.smith@lognpacific.org` |
-| Targeted Account | `j.reynolds@lognpacific.org` |
+| `IP` | `205.147.16.190` — Attacker IP (Netherlands) |
+| `EMAIL` | `insights@duck.com` — Exfiltration address |
+| `SESSION` | `00225cfa-a0ff-fb46-a079-5d152fcdf72a` — Attacker session ID |
+| `RULE` | `.` — Inbox rule forwarding: invoice, payment, wire, transfer |
+| `RULE` | `-` — Inbox rule deleting: suspicious, security, phishing, unusual, compromised, verify |
+| `USER-AGENT` | `Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:147.0) Gecko/20100101 Firefox/147.0` |
+| `SUBJECT` | `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
+| `ACCOUNT` | `m.smith@lognpacific.org` — Compromised identity |
+| `TARGET` | `j.reynolds@lognpacific.org` — BEC target |
 
 ---
 
 ## Containment Actions
 
-Immediate response actions in priority order:
+> 🚨 **Immediate Priority — Revoke Session**
+> The attacker still holds a valid session token. **Revoking the session is the single most important first action** — everything else means nothing if the attacker retains a live authenticated session in M365.
 
-1. **Revoke Session** — Invalidate all active tokens for `m.smith@lognpacific.org` immediately. This is the single most important first action — everything else means nothing if the attacker still has a live session.
-2. **Reset Password** — Force password reset to prevent re-authentication with stolen credentials.
-3. **Remove Inbox Rules** — Delete both `.` and `-` inbox rules to stop exfiltration and restore victim visibility.
-4. **Block Attacker IP** — Block `205.147.16.190` at the firewall and Conditional Access level.
-5. **Notify J. Reynolds** — Confirm the wire transfer request was fraudulent and liaise with the bank to recover the frozen £24,500.
-6. **Audit all M365 users** — Check for similar inbox rules or suspicious signin activity across the organisation.
+| Priority | Action | Rationale |
+|----------|--------|-----------|
+| 1 | **Revoke Session** | Invalidate all active tokens for `m.smith@lognpacific.org` immediately |
+| 2 | **Reset Password** | Block re-authentication with stolen infostealer credentials |
+| 3 | **Remove Inbox Rules** | Delete both `.` and `-` rules — stop exfiltration, restore visibility |
+| 4 | **Block Attacker IP** | Block `205.147.16.190` at firewall and Conditional Access |
+| 5 | **Notify J. Reynolds** | Confirm wire request was fraudulent — liaise with bank to recover frozen funds |
+| 6 | **Org-Wide Audit** | Check all M365 accounts for similar inbox rules or suspicious signin activity |
 
 ---
 
@@ -294,66 +404,57 @@ Immediate response actions in priority order:
 
 | Priority | Recommendation |
 |----------|---------------|
-| 🔴 Critical | **Implement Conditional Access policies** — Block signin from non-compliant devices and high-risk locations immediately |
-| 🔴 Critical | **Enable MFA number matching** — Prevents push bombing by requiring users to match a displayed code before approving |
-| 🔴 Critical | **Deploy phishing-resistant MFA (FIDO2/WebAuthn)** — Hardware security keys cryptographically bind authentication to the legitimate domain, making AiTM interception impossible |
-| 🟠 High | **Alert on New-InboxRule events** — Any inbox rule forwarding to external domains should trigger an immediate security alert |
-| 🟠 High | **User awareness training** — Specifically targeting MFA fatigue recognition and thread hijacking awareness for finance staff |
-| 🟠 High | **Impossible travel alerting** — Flag simultaneous or near-simultaneous logins from geographically distant locations |
-| 🟡 Medium | **Monitor infostealer exposure** — Regularly check dark web sources for employee credential exposure |
-| 🟡 Medium | **Financial process controls** — Require secondary verification (phone call) for any banking detail changes regardless of email source |
+| 🔴 Critical | **Implement Conditional Access policies** — Block signin from non-compliant devices and high-risk foreign locations immediately |
+| 🔴 Critical | **Enable MFA number matching** — Prevents push bombing by requiring users to verify a displayed code before approving |
+| 🔴 Critical | **Deploy FIDO2/WebAuthn hardware keys** — Cryptographically binds authentication to the legitimate domain, making AiTM interception impossible |
+| 🟠 High | **Alert on external inbox rule forwarding** — Any `New-InboxRule` forwarding to an external domain should trigger an immediate security alert |
+| 🟠 High | **User awareness training** — Focus on MFA fatigue recognition and email thread hijacking for all finance staff |
+| 🟠 High | **Impossible travel alerting** — Flag simultaneous logins from geographically distant locations |
+| 🟡 Medium | **Dark web credential monitoring** — Regularly check for employee credential exposure in infostealer logs |
+| 🟡 Medium | **Finance process controls** — Require out-of-band verification (phone call) for any banking detail changes regardless of email source |
 
 ---
 
-## Key Terminology
+## Full Flags Log
 
-**Business Email Compromise (BEC)** — A cyberattack where an attacker compromises or impersonates a legitimate business email account to deceive employees into taking a financially damaging action. BEC is particularly dangerous because it bypasses technical controls by using real trusted accounts, exploits human trust, and targets financial workflows like wire transfers and invoice payments. The FBI consistently ranks BEC as the most financially damaging cybercrime globally. This investigation is a textbook example.
-
-**MFA Fatigue (Push Bombing)** — A social engineering technique where an attacker repeatedly sends MFA push notifications to a victim's device until they approve one out of frustration or confusion. Requires no technical exploit — it attacks human patience rather than technical controls.
-
-**Adversary-in-the-Middle (AiTM)** — An attack where a proxy server sits between the victim and a legitimate service, intercepting authentication tokens in real time. Used in this case to steal Mark's session cookie the moment he approved the MFA push.
-
-**Infostealer** — Malware that silently harvests saved browser passwords, session tokens, autofill data, and credentials from infected machines. Stolen data is packaged into logs and sold on dark web markets. Scattered Spider routinely purchases these logs for initial access.
-
-**Session Token / Cookie** — A credential issued by a service after successful authentication. Possessing a valid session token grants access without needing a username, password, or MFA. This is what the attacker stole via AiTM.
-
----
-
-## Full Findings Log
-
-| Flag | Finding |
-|------|---------|
-| F1 | Sentinel Workspace: `law-cyber-range` |
-| F2 | Compromised Identity: `m.smith@lognpacific.org` |
-| F3 | Attacker Country of Origin: `NL` (Netherlands) |
-| F4 | Mark's Legitimate IP: `172.175.65.103` (United States) |
-| F5 | Attacker IP: `205.147.16.190` (Netherlands) |
-| F6 | MFA Incomplete Error Code: `50074` |
-| F7 | MFA Push Bombing Attempts Before Success: `3` |
-| F8 | First Application Accessed: `One Outlook Web` |
-| F9 | First CloudApp Action: `MailItemsAccessed` |
-| F10 | Persistence Mechanism: `New-InboxRule` |
-| F11 | Inbox Rule 1 Name: `.` |
-| F12 | Forward Destination: `insights@duck.com` |
-| F13 | Keywords Monitored (Rule 1): `invoice, payment, wire, transfer` |
-| F14 | Rule Priority Parameter: `StopProcessingRules` |
-| F15 | Inbox Rule 2 Name: `-` |
-| F16 | Delete Keywords (Rule 2): `suspicious, security, phishing, unusual, compromised, verify` |
-| F17 | BEC Email Recipient: `j.reynolds@lognpacific.org` |
-| F18 | BEC Email Subject: `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
-| F19 | Email Direction: `Intra-org` |
-| F20 | BEC Sender IP (Cross-Correlated): `205.147.16.190` |
-| F21 | Data Store Accessed: `Microsoft OneDrive for Business` |
-| F22 | Additional Application Accessed: `SharePoint Online` |
-| F23 | Attacker Session ID: `00225cfa-a0ff-fb46-a079-5d152fcdf72a` |
-| F24 | Conditional Access Status: `notApplied` |
-| F25 | MITRE ATT&CK — MFA Fatigue: `T1621` |
-| F26 | MITRE ATT&CK — Email Hiding: `T1564.008` |
-| F27 | Initial Credential Source: `Infostealer` |
-| F28 | First Containment Action: `Revoke Session` |
-| F29 | Threat Actor: `Scattered Spider` |
+| Flag | Category | Finding |
+|------|----------|---------|
+| F01 | Environment | `law-cyber-range` |
+| F02 | Identity | `m.smith@lognpacific.org` |
+| F03 | Geography | NL — Netherlands |
+| F04 | Legitimate IP | `172.175.65.103` (United States) |
+| F05 | Attacker IP | `205.147.16.190` (Netherlands) |
+| F06 | Error Code | `50074` — Strong Authentication required |
+| F07 | MFA Attempts | 3 failed attempts before approval |
+| F08 | First App | `One Outlook Web` |
+| F09 | First Action | `MailItemsAccessed` |
+| F10 | Persistence | `New-InboxRule` |
+| F11 | Rule 1 Name | `.` (single period) |
+| F12 | Exfil Address | `insights@duck.com` |
+| F13 | Rule 1 Keywords | `invoice, payment, wire, transfer` |
+| F14 | Rule Parameter | `StopProcessingRules` |
+| F15 | Rule 2 Name | `-` (single hyphen) |
+| F16 | Rule 2 Keywords | `suspicious, security, phishing, unusual, compromised, verify` |
+| F17 | BEC Recipient | `j.reynolds@lognpacific.org` |
+| F18 | Email Subject | `RE: Invoice #INV-2026-0892 - Updated Banking Details` |
+| F19 | Email Direction | `Intra-org` |
+| F20 | IP Cross-Correl. | `205.147.16.190` confirmed across SigninLogs + EmailEvents |
+| F21 | Data Store | `Microsoft OneDrive for Business` |
+| F22 | Additional App | `SharePoint Online` |
+| F23 | Session ID | `00225cfa-a0ff-fb46-a079-5d152fcdf72a` |
+| F24 | CA Status | `notApplied` |
+| F25 | MITRE — MFA | `T1621` — MFA Request Generation |
+| F26 | MITRE — Rules | `T1564.008` — Email Hiding Rules |
+| F27 | Initial Access | Infostealer credentials |
+| F28 | Containment | Revoke Session |
+| F29 | Threat Actor | **Scattered Spider** (UNC3944) |
 
 ---
 
-*Report compiled by Ramin Delsouz | Cyber Range Investigation | LogN Pacific Financial Services*  
-*All IP addresses, email addresses, and domain names represent simulated infrastructure for training purposes.*
+<div align="center">
+
+*Analyst: Ramin Delsouz &nbsp;|&nbsp; Platform: Microsoft Sentinel (law-cyber-range) &nbsp;|&nbsp; 26 February 2026*
+
+*All IP addresses, email addresses, and domain names represent simulated infrastructure for training purposes only.*
+
+</div>
