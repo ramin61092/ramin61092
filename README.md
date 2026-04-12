@@ -22,7 +22,8 @@
 ## Certification
 
 <p>
-  <img src="https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=for-the-badge&logo=comptia&logoColor=white" />
+<img src="https://img.shields.io/badge/CompTIA-Security%2B-FF0000?style=for-the-badge&logo=comptia&logoColor=white" />
+<img src="https://img.shields.io/badge/Google-CyberSec%20Certificate-4285F4?style=for-the-badge&logo=google&logoColor=white" />
 </p>
 
 ---
@@ -42,6 +43,7 @@
 ---
 
 ## 🚨 Threat Hunting & Security Operations
+* [Threat Hunt — Scattered Invoice](https://github.com/ramin61092/ramin61092/blob/main/Threat%20Hunt-%22Scattered%20Invoice%22.md) Investigated a confirmed £24,500 fraudulent wire transfer at a financial services organisation, tracing the full attack chain from MFA fatigue and AiTM session hijacking through inbox rule persistence and Business Email Compromise. Attributed to Scattered Spider (UNC3944).
 
 - **[Threat Hunt — Port Of Entry](Threat-Hunt-"Port-Of-Entry".md)**
   Investigated a simulated intrusion scenario, tracing attacker movement from initial access through lateral movement using log analysis and IOC correlation.
