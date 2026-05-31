@@ -48,6 +48,9 @@
 - **[Threat Hunt — Port Of Entry](Threat-Hunt-"Port-Of-Entry".md)**
   Investigated a simulated intrusion scenario, tracing attacker movement from initial access through lateral movement using log analysis and IOC correlation.
 
+- [Threat Hunt — Signals After the Noise](https://github.com/ramin61092/ramin61092/blob/main/Threat%20Hunt-%22Operation%20Signals%20After%20the%20Noise%22.md) Investigated a post-intrusion compromise of a healthcare application estate, reconstructing operator activity from initial credential reuse through triple persistence, defense evasion, redundant C2 beaconing, and LSASS credential dumping. Threat actor unattributed.
+  
+
 ---
 
 My path here wasn't traditional — I come from real estate, where reading risk and making fast decisions with incomplete information is just part of the job. That foundation shaped how I approach security. I've worked with real logs, run threat hunts in Microsoft Sentinel and Azure, and built every project in this portfolio from scratch because understanding the "why" has always mattered more to me than checking a box. I also leverage AI deliberately — to sharpen queries, accelerate reporting, and cut through noise faster than I could alone. I'm early in this field, but I'm not starting from zero. Everything here is proof of that. This portfolio is still growing. So am I.
