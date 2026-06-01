@@ -54,7 +54,7 @@
 
 ## 🔬 Home Labs
 
-- [Microsoft Purview DLP Lab](https://github.com/ramin61092/Data-Loss-Prevention) Designed and deployed a U.S. Financial Data DLP policy in Microsoft Purview, configuring tiered detection rules for credit card numbers, bank account numbers, and ABA routing numbers across Exchange, SharePoint, and OneDrive. Validated policy detection through simulated data exfiltration testing and documented full troubleshooting methodology including licensing and sync error resolution.
+- [Microsoft Purview DLP Lab](https://github.com/ramin61092/Data-Loss-Prevention/blob/main/Purview.md) Designed and deployed a U.S. Financial Data DLP policy in Microsoft Purview, configuring tiered detection rules for credit card numbers, bank account numbers, and ABA routing numbers across Exchange, SharePoint, and OneDrive. Validated policy detection through simulated data exfiltration testing and documented full troubleshooting methodology including licensing and sync error resolution.
 ---
 
 My path here wasn't traditional — I come from real estate, where reading risk and making fast decisions with incomplete information is just part of the job. That foundation shaped how I approach security. I've worked with real logs, run threat hunts in Microsoft Sentinel and Azure, and built every project in this portfolio from scratch because understanding the "why" has always mattered more to me than checking a box. I also leverage AI deliberately — to sharpen queries, accelerate reporting, and cut through noise faster than I could alone. I'm early in this field, but I'm not starting from zero. Everything here is proof of that. This portfolio is still growing. So am I.
